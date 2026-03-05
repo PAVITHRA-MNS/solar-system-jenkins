@@ -24,7 +24,8 @@ pipeline {
             sh 'npm audit --audit-level=critical'
           }
         }
-   
+    stage ("Parallel stages") {
+    parallel {
     stage('Unit Testing') {
         steps {
           sh 'npm test'
@@ -37,6 +38,8 @@ pipeline {
             sh 'npm run coverage'
         }
       }
+    }
+    }
     }
     
 
@@ -289,4 +292,5 @@ EOF
       }
     }
 }
+
 
