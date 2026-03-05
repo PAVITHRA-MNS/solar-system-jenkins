@@ -21,19 +21,19 @@ pipeline {
 
     stage('NPM Dependency Audit') {
           steps {
-            sh 'npm audit --audit-level=critical || true'
+            sh 'npm audit --audit-level=critical'
           }
         }
    
     stage('Unit Testing') {
         steps {
-          sh 'npm test || true'
+          sh 'npm test'
         }
       }
 
     stage('Code Coverage') {
       steps {
-        catchError(buildResult: 'SUCCESS', message: 'Oops! it will be fixed in futher releases', stageResult: 'SUCCESS') {
+        catchError(buildResult: 'UNSTABLE', message: 'Oops! it will be fixed in futher releases', stageResult: 'UNSTABLE') {
             sh 'npm run coverage'
         }
       }
@@ -289,3 +289,4 @@ EOF
       }
     }
 }
+
