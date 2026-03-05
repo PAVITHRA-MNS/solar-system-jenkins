@@ -91,7 +91,9 @@ app.get('/ready',   function(req, res) {
     });
 })
 
-app.listen(3000, () => { console.log("Server successfully running on port - " +3000); })
+if (process.env.NODE_ENV !== "test") {
+  app.listen(3000);
+}
 module.exports = app;
 
 //module.exports.handler = serverless(app)
