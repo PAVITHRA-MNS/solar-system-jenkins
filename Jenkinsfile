@@ -254,7 +254,21 @@ EOF
      }
 
  
-
+    stage('Lambda - Invoke Function') {
+       when {
+           expression { env.CHANGE_TARGET == 'main' }
+       }
+       steps {
+           withAWS(credentials: 'localstack-aws-credentials', region: 'us-east-1', endpointUrl: 'http://localhost:4566') {
+               sh '''
+               sleep 50s
+               function_url_data=$(/usr/local/bin/aws --endpoint-url http://localhost:4566 lambda get-function-url-config --function-name solar-system-lambda-function)
+               function_url=$(echo $function_url_data | jq -r '.FunctionUrl | sub("/$"; "")')
+               curl -Is $function_url/live | grep -i "200 OK"
+               '''
+           }
+       }
+   }
 
 
  
