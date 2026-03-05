@@ -1,49 +1,38 @@
-# Solar System NodeJS Application
+**End-to-End DevSecOps CI/CD Pipeline with Branch-Based Deployments**
 
-A simple HTML+MongoDB+NodeJS project to display Solar System and it's planets.
+I built a **complete DevSecOps CI/CD pipeline using Jenkins** for a Node.js application that automates testing, security scanning, containerization, and multi-environment deployments.
 
----
-## Requirements
+The pipeline follows a **branch-based deployment strategy** using Jenkins `when` conditions:
 
-For development, you will only need Node.js and NPM installed in your environement.
+🔹 **Feature Branch (`feature/*`)**
+When code is pushed to a feature branch, the pipeline builds the application, runs tests, creates a Docker image, and **deploys it to a development VM using SSH and Docker**. After deployment, **integration tests are executed on the VM** to verify the application in a real runtime environment.
 
-### Node
-- #### Node installation on Windows
+🔹 **Pull Request (`PR*`)**
+When a Pull Request is created, the pipeline updates the **Kubernetes deployment manifest in a GitOps repository** with the new Docker image tag and automatically raises a PR. After approval and **ArgoCD sync**, the application is deployed to the **Kubernetes cluster**. A **DAST security scan using OWASP ZAP** is also performed to identify runtime vulnerabilities.
 
-  Just go on [official Node.js website](https://nodejs.org/) and download the installer.
-Also, be sure to have `git` available in your PATH, `npm` might need it (You can find git [here](https://git-scm.com/)).
+🔹 **Main Branch (`main`)**
+Once the PR is merged into the main branch, the pipeline packages the application for **serverless deployment**. The code is zipped, uploaded to **Amazon S3**, and deployed as an **AWS Lambda function**, followed by a test invocation to verify the deployment.
 
-- #### Node installation on Ubuntu
-
-  You can install nodejs and npm easily with apt install, just run the following commands.
-
-      $ sudo apt install nodejs
-      $ sudo apt install npm
-
-- #### Other Operating Systems
-  You can find more information about the installation on the [official Node.js website](https://nodejs.org/) and the [official NPM website](https://npmjs.org/).
-
-If the installation was successful, you should be able to run the following command.
-
-    $ node --version
-    v8.11.3
-
-    $ npm --version
-    6.1.0
+This approach ensures **progressive delivery across environments — Development VM → Kubernetes → Serverless deployment**.
 
 ---
-## Install Dependencies from `package.json`
-    $ npm install
 
-## Run Unit Testing
-    $ npm test
+### 🛠 Tools & Technologies Used
 
-## Run Code Coverage
-    $ npm run coverage
+• Jenkins – CI/CD pipeline orchestration
+• Node.js & NPM – Application runtime and dependency management
+• Docker – Containerization
+• Docker Registry – Image storage
+• Trivy – Container vulnerability scanning
+• OWASP ZAP – Dynamic application security testing (DAST)
+• Git / Gitea – Source code and GitOps repository
+• SSH – Remote VM deployment
+• Kubernetes – Container orchestration
+• ArgoCD – GitOps continuous delivery
+• AWS S3 – Artifact storage
+• AWS Lambda – Serverless deployment
+• LocalStack – Local AWS service simulation
+• Bash – Integration testing scripts
 
-## Run Application
-    $ npm start
-
-## Access Application on Browser
-    http://localhost:3000/
+This project demonstrates how **CI/CD, DevSecOps practices, GitOps workflows, container security, Kubernetes deployments, and serverless architectures** can be integrated into a single automated pipeline.
 
