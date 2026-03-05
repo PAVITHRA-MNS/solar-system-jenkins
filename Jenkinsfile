@@ -94,6 +94,7 @@ pipeline {
           sshagent(['vm-dev-deploy-instance']) {
             sh """
         ssh -o StrictHostKeyChecking=no root@node01 '
+          sudo docker pull kodekloud-hub:5000/solar-system:${GIT_COMMIT}
           if sudo docker ps -a --format "{{.Names}}" | grep -w solar-system; then
             echo "Stopping existing container..."
             sudo docker stop solar-system
