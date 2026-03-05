@@ -25,6 +25,8 @@ pipeline {
           }
         }
    
+    stage("Parallel stages") {
+    parallel {
     stage('Unit Testing') {
         steps {
           sh 'npm test || true'
@@ -37,6 +39,8 @@ pipeline {
             sh 'npm run coverage'
         }
       }
+    }
+    }
     }
     
 
@@ -97,8 +101,8 @@ pipeline {
           sudo docker pull kodekloud-hub:5000/solar-system:${GIT_COMMIT}
           if sudo docker ps -a --format "{{.Names}}" | grep -w solar-system; then
             echo "Stopping existing container..."
-            sudo docker stop solar-system
-            sudo docker rm -f solar-system
+            sudo docker stop solar-system || true
+            sudo docker rm -f solar-system || true
           fi
 
           sudo docker run -d --name solar-system \
